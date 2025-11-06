@@ -10,12 +10,20 @@ import org.springframework.stereotype.Service;
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
+    private final UserValidationService userValidationService;
 
-    public ActivityService(ActivityRepository activityRepository) {
+    public ActivityService(ActivityRepository activityRepository, UserValidationService userValidationService) {
         this.activityRepository = activityRepository;
+        this.userValidationService = userValidationService;
     }
 
     public ActivityResponse trackActivity(ActivityRequest activityRequest) {
+
+        Boolean isValidUser = userValidationService.validateUser(activityRequest.userId());
+
+        if (!isValidUser) {
+            throw new RuntimeException("Invalid User" + activityRequest.userId());
+        }
         Activity activity = Activity.builder()
                 .userId(activityRequest.userId())
                 .activityType(activityRequest.activityType())

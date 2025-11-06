@@ -52,4 +52,8 @@ public class UserService {
         User user=userRepository.findById(id).orElseThrow(()->new RuntimeException("User not Found."));
         return daoToDto(user);
     }
+
+    public Boolean existsByUserId(String id) {
+        return userRepository.existsById(id);
+    }
 }
